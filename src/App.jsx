@@ -99,11 +99,57 @@ Your job is to deeply review this code and provide the following:
 
 Analyze it like a senior developer reviewing a pull request.
 
+
 Code: ${code}
 `,
     });
     setResponse(response.text)
     setLoading(false);
+  }
+
+  async function fixCode() {
+    if (code === "") {
+      alert("Please enter code first");
+      return;
+    }
+
+    setResponse("");
+    setLoading(true);
+    
+    try {
+      const result = await ai.models.generateContent({
+        model: "gemini-2.0-flash",
+        contents: `You are an expert software developer. I have code written in ${selectedOption.value} that may contain bugs, errors, or could be improved.
+
+Your task is to:
+1. Fix all syntax errors
+2. Fix all logical errors and bugs
+3. Improve code quality and follow best practices
+4. Optimize performance where possible
+5. Add proper error handling if missing
+
+**IMPORTANT**: Return ONLY the fixed code without any explanations, markdown formatting, or code blocks. Just the raw, corrected code that can be directly used.
+
+Original Code:
+${code}
+`,
+      });
+
+      const fixedCode = result.text.trim();
+      
+      // Remove markdown code blocks if present
+      let cleanedCode = fixedCode;
+      if (cleanedCode.startsWith('```')) {
+        cleanedCode = cleanedCode.replace(/```[\w]*\n?/g, '').trim();
+      }
+      
+      setCode(cleanedCode);
+      setResponse("✅ Code has been fixed and updated in the editor!");
+      setLoading(false);
+    } catch (error) {
+      setResponse(`❌ Error fixing code: ${error.message}`);
+      setLoading(false);
+    }
   }
 
   const toggleTheme = () => {
@@ -129,6 +175,7 @@ Code: ${code}
               styles={getCustomStyles(isDarkTheme)}
             />
             <button 
+              onClick={fixCode}
               className="btnNormal min-w-[120px] transition-all"
               style={{
                 backgroundColor: isDarkTheme ? '#18181b' : '#f4f4f5',
