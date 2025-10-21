@@ -36,7 +36,8 @@ Check the live demo: [https://codrev.vercel.app](https://codrev.vercel.app)
 
 ## Screenshots
 
-![CodeFixer AI Screenshot](ss.png)  
+<img width="1436" height="779" alt="ss" src="https://github.com/user-attachments/assets/ac1ae66e-47e1-4888-b9ae-aa83ffcd079f" />
+
 
 *Editor on the left and AI response panel on the right with dark theme enabled.*
 
