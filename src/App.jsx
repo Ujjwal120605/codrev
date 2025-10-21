@@ -6,8 +6,11 @@ import Select from 'react-select';
 import { GoogleGenAI } from "@google/genai";
 import Markdown from 'react-markdown'
 import RingLoader from "react-spinners/RingLoader";
+const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
 
 const App = () => {
+  const [isDarkTheme, setIsDarkTheme] = useState(true);
+
   const options = [
     { value: 'javascript', label: 'JavaScript' },
     { value: 'python', label: 'Python' },
@@ -33,47 +36,48 @@ const App = () => {
 
   const [selectedOption, setSelectedOption] = useState(options[0]);
 
-  const customStyles = {
+  const getCustomStyles = (isDark) => ({
     control: (provided) => ({
       ...provided,
-      backgroundColor: '#18181b', // dark background (similar to bg-zinc-900)
-      borderColor: '#3f3f46',
-      color: '#fff',
+      backgroundColor: isDark ? '#18181b' : '#ffffff',
+      borderColor: isDark ? '#3f3f46' : '#d4d4d8',
+      color: isDark ? '#fff' : '#000',
       width: "100%"
     }),
     menu: (provided) => ({
       ...provided,
-      backgroundColor: '#18181b', // dropdown bg
-      color: '#fff',
+      backgroundColor: isDark ? '#18181b' : '#ffffff',
+      color: isDark ? '#fff' : '#000',
       width: "100%"
     }),
     singleValue: (provided) => ({
       ...provided,
-      color: '#fff',  // selected option text
+      color: isDark ? '#fff' : '#000',
       width: "100%"
     }),
     option: (provided, state) => ({
       ...provided,
-      backgroundColor: state.isFocused ? '#27272a' : '#18181b',  // hover effect
-      color: '#fff',
+      backgroundColor: state.isFocused 
+        ? (isDark ? '#27272a' : '#f4f4f5') 
+        : (isDark ? '#18181b' : '#ffffff'),
+      color: isDark ? '#fff' : '#000',
       cursor: 'pointer',
-      // width: "30%"
     }),
     input: (provided) => ({
       ...provided,
-      color: '#fff',
+      color: isDark ? '#fff' : '#000',
       width: "100%"
     }),
     placeholder: (provided) => ({
       ...provided,
-      color: '#a1a1aa',  // placeholder text color
+      color: isDark ? '#a1a1aa' : '#71717a',
       width: "100%"
     }),
-  };
+  });
 
   const [code, setCode] = useState("");
 
-  const ai = new GoogleGenAI({ apiKey: "YOUR_API_KEY" }); // replace "YOUR_API_KEY" with you api key
+  const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
   const [loading, setLoading] = useState(false);
   const [response, setResponse] = useState("");
 
@@ -83,7 +87,7 @@ const App = () => {
     const response = await ai.models.generateContent({
       model: "gemini-2.0-flash",
       contents: `You are an expert-level software developer, skilled in writing efficient, clean, and advanced code.
-I’m sharing a piece of code written in ${selectedOption.value}.
+I'm sharing a piece of code written in ${selectedOption.value}.
 Your job is to deeply review this code and provide the following:
 
 1️⃣ A quality rating: Better, Good, Normal, or Bad.
@@ -102,35 +106,78 @@ Code: ${code}
     setLoading(false);
   }
 
+  const toggleTheme = () => {
+    setIsDarkTheme(!isDarkTheme);
+  };
 
   return (
     <>
-      <Navbar />
-      <div className="main flex justify-between" style={{ height: "calc(100vh - 90px" }}>
+      <Navbar isDarkTheme={isDarkTheme} toggleTheme={toggleTheme} />
+      <div 
+        className="main flex justify-between" 
+        style={{ 
+          height: "calc(100vh - 90px)", 
+          backgroundColor: isDarkTheme ? '#09090b' : '#ffffff' 
+        }}
+      >
         <div className="left h-[87.5%] w-[50%]">
           <div className="tabs !mt-5 !px-5 !mb-3 w-full flex items-center gap-[10px]">
             <Select
               value={selectedOption}
               onChange={(e) => { setSelectedOption(e) }}
               options={options}
-              styles={customStyles}
+              styles={getCustomStyles(isDarkTheme)}
             />
-            <button className="btnNormal bg-zinc-900 min-w-[120px] transition-all hover:bg-zinc-800">Fix Code</button>
-            <button onClick={() => {
-              if (code === "") {
-                alert("Please enter code first")
-              }
-              else {
-                reviewCode()
-              }
-            }} className="btnNormal bg-zinc-900 min-w-[120px] transition-all hover:bg-zinc-800">Review</button>
+            <button 
+              className="btnNormal min-w-[120px] transition-all"
+              style={{
+                backgroundColor: isDarkTheme ? '#18181b' : '#f4f4f5',
+                color: isDarkTheme ? '#fff' : '#000'
+              }}
+            >
+              Fix Code
+            </button>
+            <button 
+              onClick={() => {
+                if (code === "") {
+                  alert("Please enter code first")
+                }
+                else {
+                  reviewCode()
+                }
+              }} 
+              className="btnNormal min-w-[120px] transition-all"
+              style={{
+                backgroundColor: isDarkTheme ? '#18181b' : '#f4f4f5',
+                color: isDarkTheme ? '#fff' : '#000'
+              }}
+            >
+              Review
+            </button>
           </div>
 
-          <Editor height="100%" theme='vs-dark' language={selectedOption.value} value={code} onChange={(e) => { setCode(e) }} />
+          <Editor 
+            height="100%" 
+            theme={isDarkTheme ? 'vs-dark' : 'light'} 
+            language={selectedOption.value} 
+            value={code} 
+            onChange={(e) => { setCode(e) }} 
+          />
         </div>
 
-        <div className="right overflow-scroll !p-[10px] bg-zinc-900 w-[50%] h-[101%]">
-          <div className="topTab border-b-[1px] border-t-[1px] border-[#27272a] flex items-center justif-between h-[60px]">
+        <div 
+          className="right overflow-scroll !p-[10px] w-[50%] h-[101%]"
+          style={{
+            backgroundColor: isDarkTheme ? '#18181b' : '#f9fafb',
+            color: isDarkTheme ? '#fff' : '#000'
+          }}
+        >
+          <div 
+            className="topTab border-b-[1px] border-t-[1px] flex items-center justif-between h-[60px]"
+            style={{
+              borderColor: isDarkTheme ? '#27272a' : '#e4e4e7'
+            }}
+          >
             <p className='font-[700] text-[17px]'>Response</p>
           </div>
           {loading && <RingLoader color='#9333ea'/>}
