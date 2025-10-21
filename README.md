@@ -36,7 +36,8 @@ Check the live demo: [https://codrev.vercel.app](https://codrev.vercel.app)
 
 ## Screenshots
 
-<img width="1436" height="779" alt="ss" src="https://github.com/user-attachments/assets/ac1ae66e-47e1-4888-b9ae-aa83ffcd079f" />
+<img width="1440" height="780" alt="Screenshot 2025-10-22 at 2 58 43 AM" src="https://github.com/user-attachments/assets/e36ef400-5556-48ec-bd78-d8516be1b6e6" />
+
 
 
 *Editor on the left and AI response panel on the right with dark theme enabled.*
