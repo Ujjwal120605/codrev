@@ -356,37 +356,18 @@ Provide step-by-step refactoring guide with before/after examples for top 5 impr
       alert("Please enter code first");
       return;
     }
-
+  
     saveToHistory(code);
-    setResponse("");
     setLoading(true);
     
     try {
       const result = await ai.models.generateContent({
         model: "gemini-2.0-flash",
-        contents: `You are an expert ${selectedOption.value} developer. Transform the provided code into PRODUCTION-READY, ENTERPRISE-GRADE code.
-
-## TRANSFORMATION REQUIREMENTS:
-
-1. **Fix ALL Issues**: Bugs, security vulnerabilities, performance problems
-2. **Apply Best Practices**: Industry standards, design patterns, SOLID principles
-3. **Enhance Error Handling**: Comprehensive try-catch, input validation, edge cases
-4. **Optimize Performance**: Better algorithms, efficient data structures
-5. **Improve Readability**: Clear naming, proper comments, modular structure
-6. **Add Type Safety**: (if applicable for the language)
-7. **Security Hardening**: Input sanitization, output encoding, secure defaults
-
-## OUTPUT FORMAT:
-Return ONLY the transformed code without explanations, markdown, or code blocks. Just clean, production-ready code.
-
-**Original Code:**
-\`\`\`${selectedOption.value}
-${code}
-\`\`\`
-
-Transform this into code worthy of a senior developer's approval.`,
+        contents: `You are an expert ${selectedOption.value} developer. Fix all issues and transform the following code into clean, production-ready code. Return only the code, without explanations, Markdown, or comments.
+  
+  ${code}`,
       });
-
+  
       let fixedCode = result.text.trim();
       
       // Remove markdown code blocks if present
@@ -395,13 +376,13 @@ Transform this into code worthy of a senior developer's approval.`,
       }
       
       setCode(fixedCode);
-      setResponse("✅ **Code Successfully Transformed!**\n\nYour code has been upgraded to production quality with:\n- Security enhancements\n- Performance optimizations\n- Best practices applied\n- Error handling improved\n\n*Use Undo (Ctrl+Z) to revert if needed.*");
       setLoading(false);
     } catch (error) {
-      setResponse(`❌ Transformation Error: ${error.message}`);
       setLoading(false);
+      alert(`Fix Code Error: ${error.message}`);
     }
   }
+  
 
   async function explainCode() {
     if (code === "") {
