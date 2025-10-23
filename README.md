@@ -30,7 +30,7 @@
 
 ## Demo
 
-Check the live demo: [https://codrev.vercel.app](https://codrev.vercel.app)
+Check the live demo: [[https://codrev.vercel.app](https://codrev.vercel.app)](https://codrev-346flfwrf-ujjwalbajpaiec23-5233s-projects.vercel.app/app)
 
 ---
 
