@@ -1,21 +1,29 @@
-// nav.jsx
 import React from 'react';
-import { Link } from 'react-router-dom';
+import Pillnav from './Pillnav';
+import logo from '/abc.jpg';
 
 const Nav = () => {
   return (
-    <nav className="bg-gray-900 text-white shadow-md">
-      <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
-        <span className="text-lg font-bold">MyApp</span>
-
-        <Link
-          to="/app"
-          className="bg-gray-800 hover:bg-gray-700 border border-white rounded px-4 py-1 text-sm transition-colors"
-        >
-          Route
-        </Link>
-      </div>
-    </nav>
+    <div className="fixed top-0 left-0 right-0 z-[1000] flex justify-center pt-6 px-4">
+      <Pillnav
+        logo={logo}
+        logoAlt="Coderev Logo"
+        items={[
+          { label: 'Home', href: '/' },
+          { label: 'About', href: '/app/about' },  // Changed from /about to /app/about
+          { label: 'Contact', href: '/contact' }
+        ]}
+        
+        activeHref="/"
+        className="custom-nav"
+        ease="power2.easeOut"
+        baseColor="#000000"
+        pillColor="#ffffff"
+        hoveredPillTextColor="#ffffff"
+        pillTextColor="#000000"
+        initialLoadAnimation={true}
+      />
+    </div>
   );
 };
 
