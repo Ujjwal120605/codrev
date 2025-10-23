@@ -1,7 +1,7 @@
 
 #CodRev AI - Real-Time Code Review & Fixer
 
-[![Vercel](https://img.shields.io/badge/Deployed-Vercel-purple)]([https://codrev.vercel.app/](https://codrev-38aou0suu-ujjwalbajpaiec23-5233s-projects.vercel.app/))
+[![Vercel](https://img.shields.io/badge/Deployed-Vercel-purple)]
 
 **CodeFixer AI** is a web-based AI-powered code assistant that allows developers to **review, analyze, and automatically fix code** in multiple programming languages. Using Google’s Gemini AI, it provides detailed code feedback, syntax fixes, bug detection, optimization suggestions, and best practice recommendations in real-time.  
 
