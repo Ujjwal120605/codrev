@@ -30,9 +30,8 @@
 
 ## Demo
 
-Check the live demo: [[codrev.vercel.app]](https://codrev-346flfwrf-ujjwalbajpaiec23-5233s-projects.vercel.app/app)
-
----
+## 🌐 Live Demo
+🚀 **[CodRev Website (Vercel)]([https://codrev.vercel.app](https://codrev-346flfwrf-ujjwalbajpaiec23-5233s-projects.vercel.app/))**  
 
 ## Screenshots
 
