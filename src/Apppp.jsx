@@ -1,13 +1,14 @@
 import React, { useState } from 'react'
 import "./App.css"
 import Navbar from './components/Navbar'
-import Landing from './components/Landing';
+
 import Editor from '@monaco-editor/react';
 import Select from 'react-select';
-import { GoogleGenAI } from "@google/genai";
+import Groq from "groq-sdk";
+import { executeCode } from './services/compiler';
 import Markdown from 'react-markdown'
 import RingLoader from "react-spinners/RingLoader";
-const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
+const GROQ_API_KEY = import.meta.env.VITE_GROQ_API_KEY;
 
 const Apppp = () => {
   const [isDarkTheme, setIsDarkTheme] = useState(true);
@@ -59,8 +60,8 @@ const Apppp = () => {
     }),
     option: (provided, state) => ({
       ...provided,
-      backgroundColor: state.isFocused 
-        ? (isDark ? '#27272a' : '#f4f4f5') 
+      backgroundColor: state.isFocused
+        ? (isDark ? '#27272a' : '#f4f4f5')
         : (isDark ? '#18181b' : '#ffffff'),
       color: isDark ? '#fff' : '#000',
       cursor: 'pointer',
@@ -78,11 +79,14 @@ const Apppp = () => {
   });
 
   const [code, setCode] = useState("");
-  const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
+  const groq = new Groq({ apiKey: GROQ_API_KEY, dangerouslyAllowBrowser: true });
   const [loading, setLoading] = useState(false);
   const [response, setResponse] = useState("");
   const [codeHistory, setCodeHistory] = useState([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
+  const [output, setOutput] = useState("");
+  const [isRunning, setIsRunning] = useState(false);
+  const [activeTab, setActiveTab] = useState('analysis'); // 'analysis' or 'output'
 
   // Save code to history before making changes
   const saveToHistory = (currentCode) => {
@@ -109,7 +113,7 @@ const Apppp = () => {
 
   const getAnalysisPrompt = () => {
     const baseContext = `You are a Senior Software Architect and Security Expert analyzing ${selectedOption.value} code.`;
-    
+
     const prompts = {
       comprehensive: `${baseContext}
 
@@ -336,14 +340,14 @@ Provide step-by-step refactoring guide with before/after examples for top 5 impr
 
     setResponse("");
     setLoading(true);
-    
+
     try {
-      const result = await ai.models.generateContent({
-        model: "gemini-2.0-flash",
-        contents: getAnalysisPrompt(),
+      const completion = await groq.chat.completions.create({
+        messages: [{ role: "user", content: getAnalysisPrompt() }],
+        model: "llama-3.3-70b-versatile",
       });
-      
-      setResponse(result.text);
+
+      setResponse(completion.choices[0]?.message?.content || "No response");
       setLoading(false);
     } catch (error) {
       setResponse(`❌ Analysis Error: ${error.message}`);
@@ -356,33 +360,35 @@ Provide step-by-step refactoring guide with before/after examples for top 5 impr
       alert("Please enter code first");
       return;
     }
-  
+
     saveToHistory(code);
     setLoading(true);
-    
+
     try {
-      const result = await ai.models.generateContent({
-        model: "gemini-2.0-flash",
-        contents: `You are an expert ${selectedOption.value} developer. Fix all issues and transform the following code into clean, production-ready code. Return only the code, without explanations, Markdown, or comments.
+      const completion = await groq.chat.completions.create({
+        messages: [{
+          role: "user", content: `You are an expert ${selectedOption.value} developer. Fix all issues and transform the following code into clean, production-ready code. Return only the code, without explanations, Markdown, or comments.
   
-  ${code}`,
+  ${code}`
+        }],
+        model: "llama-3.3-70b-versatile",
       });
-  
-      let fixedCode = result.text.trim();
-      
+
+      let fixedCode = completion.choices[0]?.message?.content?.trim();
+
       // Remove markdown code blocks if present
-      if (fixedCode.startsWith('```')) {
+      if (fixedCode && fixedCode.startsWith('```')) {
         fixedCode = fixedCode.replace(/```[\w]*\n?/g, '').trim();
       }
-      
-      setCode(fixedCode);
+
+      setCode(fixedCode || code);
       setLoading(false);
     } catch (error) {
       setLoading(false);
       alert(`Fix Code Error: ${error.message}`);
     }
   }
-  
+
 
   async function explainCode() {
     if (code === "") {
@@ -392,11 +398,11 @@ Provide step-by-step refactoring guide with before/after examples for top 5 impr
 
     setResponse("");
     setLoading(true);
-    
+
     try {
-      const result = await ai.models.generateContent({
-        model: "gemini-2.0-flash",
-        contents: `You are a Computer Science professor explaining code to students.
+      const completion = await groq.chat.completions.create({
+        messages: [{
+          role: "user", content: `You are a Computer Science professor explaining code to students.
 
 Provide a COMPREHENSIVE EDUCATIONAL EXPLANATION of this ${selectedOption.value} code:
 
@@ -435,14 +441,45 @@ Use analogies to explain complex parts
 ${code}
 \`\`\`
 
-Make it understandable for both beginners and experienced developers.`,
+Make it understandable for both beginners and experienced developers.` }],
+        model: "llama-3.3-70b-versatile",
       });
-      
-      setResponse(result.text);
+
+      setResponse(completion.choices[0]?.message?.content || "No response");
       setLoading(false);
     } catch (error) {
       setResponse(`❌ Explanation Error: ${error.message}`);
       setLoading(false);
+    }
+  }
+
+  async function runCode() {
+    if (code === "") {
+      alert("Please enter code first");
+      return;
+    }
+
+    setActiveTab('output');
+    setOutput("");
+    setIsRunning(true);
+
+    try {
+      const result = await executeCode(selectedOption.value, code);
+
+      if (result.error) {
+        setOutput(`❌ Error: ${result.error}`);
+      } else {
+        const outputText = result.run.output;
+        setOutput(outputText || "Program executed successfully (no output).");
+
+        if (result.run.code !== 0) {
+          setOutput((prev) => `${prev}\n\n[Exit Code: ${result.run.code}]`);
+        }
+      }
+    } catch (error) {
+      setOutput(`❌ Execution Error: ${error.message}`);
+    } finally {
+      setIsRunning(false);
     }
   }
 
@@ -454,11 +491,11 @@ Make it understandable for both beginners and experienced developers.`,
 
     setResponse("");
     setLoading(true);
-    
+
     try {
-      const result = await ai.models.generateContent({
-        model: "gemini-2.0-flash",
-        contents: `You are a Test-Driven Development expert specializing in ${selectedOption.value}.
+      const completion = await groq.chat.completions.create({
+        messages: [{
+          role: "user", content: `You are a Test-Driven Development expert specializing in ${selectedOption.value}.
 
 Generate COMPREHENSIVE TEST CASES for the provided code:
 
@@ -501,10 +538,11 @@ For each test include:
 ${code}
 \`\`\`
 
-Generate production-ready tests with comments explaining what each test validates.`,
+Generate production-ready tests with comments explaining what each test validates.` }],
+        model: "llama-3.3-70b-versatile",
       });
-      
-      setResponse(result.text);
+
+      setResponse(completion.choices[0]?.message?.content || "No response");
       setLoading(false);
     } catch (error) {
       setResponse(`❌ Test Generation Error: ${error.message}`);
@@ -519,11 +557,11 @@ Generate production-ready tests with comments explaining what each test validate
   return (
     <>
       <Navbar isDarkTheme={isDarkTheme} toggleTheme={toggleTheme} />
-      <div 
-        className="main flex justify-between" 
-        style={{ 
-          height: "calc(100vh - 90px)", 
-          backgroundColor: isDarkTheme ? '#09090b' : '#ffffff' 
+      <div
+        className="main flex justify-between"
+        style={{
+          height: "calc(100vh - 90px)",
+          backgroundColor: isDarkTheme ? '#09090b' : '#ffffff'
         }}
       >
         <div className="left h-[87.5%] w-[50%]">
@@ -536,7 +574,7 @@ Generate production-ready tests with comments explaining what each test validate
                 options={options}
                 styles={getCustomStyles(isDarkTheme)}
               />
-              <button 
+              <button
                 onClick={undo}
                 disabled={historyIndex <= 0}
                 className="btnNormal min-w-[80px] transition-all disabled:opacity-50"
@@ -548,7 +586,7 @@ Generate production-ready tests with comments explaining what each test validate
               >
                 ↶ Undo
               </button>
-              <button 
+              <button
                 onClick={redo}
                 disabled={historyIndex >= codeHistory.length - 1}
                 className="btnNormal min-w-[80px] transition-all disabled:opacity-50"
@@ -564,7 +602,7 @@ Generate production-ready tests with comments explaining what each test validate
 
             {/* Second Row: Analysis mode selector */}
             <div className="flex items-center gap-[10px]">
-              <span 
+              <span
                 className="text-sm font-semibold whitespace-nowrap"
                 style={{ color: isDarkTheme ? '#a1a1aa' : '#71717a' }}
               >
@@ -589,7 +627,7 @@ Generate production-ready tests with comments explaining what each test validate
 
             {/* Third Row: Action buttons */}
             <div className="flex items-center gap-[10px] flex-wrap">
-              <button 
+              <button
                 onClick={analyzeCode}
                 className="btnNormal flex-1 min-w-[100px] transition-all"
                 style={{
@@ -599,7 +637,7 @@ Generate production-ready tests with comments explaining what each test validate
               >
                 🔍 Analyze
               </button>
-              <button 
+              <button
                 onClick={fixCode}
                 className="btnNormal flex-1 min-w-[100px] transition-all"
                 style={{
@@ -609,7 +647,7 @@ Generate production-ready tests with comments explaining what each test validate
               >
                 🔧 Fix Code
               </button>
-              <button 
+              <button
                 onClick={explainCode}
                 className="btnNormal flex-1 min-w-[100px] transition-all"
                 style={{
@@ -619,7 +657,7 @@ Generate production-ready tests with comments explaining what each test validate
               >
                 📚 Explain
               </button>
-              <button 
+              <button
                 onClick={generateTests}
                 className="btnNormal flex-1 min-w-[100px] transition-all"
                 style={{
@@ -629,41 +667,71 @@ Generate production-ready tests with comments explaining what each test validate
               >
                 🧪 Tests
               </button>
+              <button
+                onClick={runCode}
+                className="btnNormal flex-1 min-w-[100px] transition-all"
+                style={{
+                  backgroundColor: isDarkTheme ? '#2563eb' : '#3b82f6',
+                  color: '#fff'
+                }}
+              >
+                ▶️ Run
+              </button>
             </div>
           </div>
 
-          <Editor 
-            height="100%" 
-            theme={isDarkTheme ? 'vs-dark' : 'light'} 
-            language={selectedOption.value} 
-            value={code} 
-            onChange={(e) => { setCode(e) }} 
+          <Editor
+            height="100%"
+            theme={isDarkTheme ? 'vs-dark' : 'light'}
+            language={selectedOption.value}
+            value={code}
+            onChange={(e) => { setCode(e) }}
           />
         </div>
 
-        <div 
+        <div
           className="right overflow-scroll !p-[10px] w-[50%] h-[101%]"
           style={{
             backgroundColor: isDarkTheme ? '#18181b' : '#f9fafb',
             color: isDarkTheme ? '#fff' : '#000'
           }}
         >
-          <div 
-            className="topTab border-b-[1px] border-t-[1px] flex items-center justify-between h-[60px] px-4"
+          <div
+            className="topTab border-b-[1px] border-t-[1px] flex items-center h-[60px] px-0"
             style={{
               borderColor: isDarkTheme ? '#27272a' : '#e4e4e7'
             }}
           >
-            <p className='font-[700] text-[17px]'>
-              {loading ? 'Analyzing...' : 'Analysis Results'}
-            </p>
-            {response && !loading && (
+            <button
+              onClick={() => setActiveTab('analysis')}
+              className={`h-full px-6 font-[700] text-[15px] border-r-[1px] transition-colors ${activeTab === 'analysis' ? 'opacity-100' : 'opacity-50 hover:opacity-100'}`}
+              style={{
+                borderColor: isDarkTheme ? '#27272a' : '#e4e4e7',
+                backgroundColor: activeTab === 'analysis' ? (isDarkTheme ? '#27272a' : '#e4e4e7') : 'transparent'
+              }}
+            >
+              Analysis
+            </button>
+            <button
+              onClick={() => setActiveTab('output')}
+              className={`h-full px-6 font-[700] text-[15px] border-r-[1px] transition-colors ${activeTab === 'output' ? 'opacity-100' : 'opacity-50 hover:opacity-100'}`}
+              style={{
+                borderColor: isDarkTheme ? '#27272a' : '#e4e4e7',
+                backgroundColor: activeTab === 'output' ? (isDarkTheme ? '#27272a' : '#e4e4e7') : 'transparent'
+              }}
+            >
+              Output
+            </button>
+
+            <div className="flex-1" />
+
+            {(activeTab === 'analysis' ? response : output) && !loading && !isRunning && (
               <button
                 onClick={() => {
-                  navigator.clipboard.writeText(response);
-                  alert('Analysis copied to clipboard!');
+                  navigator.clipboard.writeText(activeTab === 'analysis' ? response : output);
+                  alert('Copied to clipboard!');
                 }}
-                className="text-sm px-3 py-1 rounded"
+                className="text-sm px-3 py-1 rounded mr-4"
                 style={{
                   backgroundColor: isDarkTheme ? '#27272a' : '#e4e4e7',
                   color: isDarkTheme ? '#fff' : '#000'
@@ -673,16 +741,22 @@ Generate production-ready tests with comments explaining what each test validate
               </button>
             )}
           </div>
-          {loading && (
+          {(loading || isRunning) && (
             <div className="flex justify-center items-center h-[200px]">
-              <RingLoader color='#9333ea' size={60}/>
+              <RingLoader color='#9333ea' size={60} />
             </div>
           )}
           <div className="p-4">
-            <Markdown>{response || "👈 Paste your code and select an analysis mode to get started!\n\n**Available Modes:**\n- 🎯 **Comprehensive Review**: Full code audit\n- 🛡️ **Security Audit**: OWASP Top 10 analysis\n- ⚡ **Performance Analysis**: Optimization opportunities\n- 🔧 **Refactoring Guide**: Clean code recommendations"}</Markdown>
+            {activeTab === 'analysis' ? (
+              <Markdown>{response || "👈 Paste your code and select an analysis mode to get started!"}</Markdown>
+            ) : (
+              <pre className="font-mono text-sm whitespace-pre-wrap">
+                {output || "Run your code to see output here..."}
+              </pre>
+            )}
           </div>
         </div>
-      </div>
+      </div >
     </>
   )
 }

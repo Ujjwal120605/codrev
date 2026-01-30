@@ -1,9 +1,15 @@
 import React from 'react';
 import FaultyTerminal from './FaultyTerminal';
+import Nav from './Nav';
 
 export const About = () => {
   return (
+   
+    
+     
+    
     <div className="min-h-screen bg-black text-white overflow-hidden">
+      <Nav />
       {/* Terminal Background - Full Screen */}
       <div className="fixed inset-0 z-0">
         <FaultyTerminal
@@ -32,9 +38,10 @@ export const About = () => {
         <div className="max-w-5xl w-full">
           {/* Main Heading */}
           <div className="text-center mb-12">
-          <h1 className="text-6xl md:text-7xl font-bold mb-4 bg-gradient-to-r from-white via-gray-100 to-blue-100 text-transparent bg-clip-text drop-shadow-[0_0_30px_rgba(255,255,255,0.3)]">
-              About Us
-            </h1>
+          <h1 className="text-6xl md:text-7xl font-bold mb-4 text-white drop-shadow-[0_0_30px_rgba(16,185,129,0.5)]">
+  About Us
+</h1>
+
             <div className="h-1 w-32 mx-auto bg-gradient-to-r from-green-400 to-teal-400 rounded-full"></div>
           </div>
           

@@ -1,21 +1,29 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import LetterGlitch from './LetterGlitch';
+import FaultyTerminal from './FaultyTerminal';
 import Nav from './Nav';
+
 
 const Landing = () => {
   return (
     <div className="relative h-screen w-screen overflow-hidden bg-black">
       {/* Nav */}
-      <Nav />
+      <Nav
+        baseColor="#1a1a1a"
+        pillColor="#00ff41"
+        pillTextColor="#000000"
+        hoveredPillTextColor="#00ff41"
+        height="60px"
+      />
 
       {/* Background */}
-      <LetterGlitch
-        glitchSpeed={50}
-        centerVignette={true}
-        outerVignette={false}
-        smooth={true}
+      {/* Background */}
+      <FaultyTerminal
+        tint="#00ff41"
+        className="absolute inset-0 z-0"
       />
+      {/* Dark Overlay for Readability */}
+      <div className="absolute inset-0 bg-black/70 z-0 pointer-events-none" />
 
       {/* Animated Background Effects */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -31,41 +39,48 @@ const Landing = () => {
             Coderev
           </span>
         </h1>
-        <p className="text-lg md:text-2xl text-gray-300 mb-12 max-w-2xl drop-shadow-md">
+        <p className="text-lg md:text-2xl text-white mb-12 max-w-2xl leading-relaxed drop-shadow-[0_2px_10px_rgba(0,0,0,0.6)]">
           Empowering your coding journey with cutting-edge tools and resources
         </p>
+
+
+
 
         {/* Get Started Button */}
         <Link
           to="/app"
-          className="group relative inline-flex items-center justify-center px-20 py-7 md:px-32 md:py-8 text-xl md:text-2xl font-bold text-white rounded-2xl overflow-hidden transition-all duration-500 hover:scale-[1.08] shadow-[0_20px_60px_rgba(0,0,0,0.3)] hover:shadow-[0_25px_80px_rgba(147,51,234,0.5)]"
+          className="group relative inline-flex items-center justify-center px-20 py-7 md:px-32 md:py-8 text-xl md:text-2xl font-bold text-white rounded-full overflow-hidden transition-all duration-500 hover:scale-[1.08] backdrop-blur-md bg-white/10 border border-white/20 shadow-[0_0_25px_rgba(255,255,255,0.1)] hover:shadow-[0_0_35px_rgba(255,255,255,0.25)]"
         >
-          {/* Glowing Background Layer */}
-          <span className="absolute inset-0 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 opacity-80 blur-xl transition-all duration-500 group-hover:opacity-100 group-hover:blur-2xl"></span>
-          
-          {/* Solid Gradient Background */}
-          <span className="absolute inset-0 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 transition-all duration-500"></span>
-          
-          {/* Hover Shine Effect */}
-          <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-700"></span>
-          
+          {/* Gradient Glow Layer */}
+          <span className="absolute inset-0 bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 opacity-0 group-hover:opacity-40 transition-opacity duration-500"></span>
+
+          {/* Animated Light Sweep */}
+          <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-700 ease-out"></span>
+
+          {/* Subtle Radial Glow */}
+          <span className="absolute inset-0 rounded-full bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.3),transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-700"></span>
+
           {/* Button Content */}
-          <span className="relative z-10 flex items-center gap-3 tracking-wide">
-            <span className="drop-shadow-lg">Start Code Review</span>
-            <svg 
-              className="w-6 h-6 md:w-7 md:h-7 transform group-hover:translate-x-2 transition-transform duration-300 drop-shadow-lg" 
-              fill="none" 
-              stroke="currentColor" 
-              viewBox="0 0 24 24"
-              strokeWidth={2.5}
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-            </svg>
-          </span>
-          
-          {/* Border Glow */}
-          <span className="absolute inset-0 rounded-2xl border-2 border-white/30 group-hover:border-white/50 transition-all duration-500"></span>
+          <button className="group relative z-10 flex items-center gap-3 px-8 py-3 text-white font-semibold tracking-wide uppercase bg-transparent transition-all duration-300 drop-shadow-lg">
+            <span className="flex items-center gap-3">
+              <span>Get Started</span>
+              <svg
+                className="w-6 h-6 md:w-7 md:h-7 transform group-hover:translate-x-2 transition-transform duration-300"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                strokeWidth={2.5}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M13 7l5 5m0 0l-5 5m5-5H6"
+                />
+              </svg>
+            </span>
+          </button>
         </Link>
+
       </div>
     </div>
   );
