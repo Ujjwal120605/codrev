@@ -31,7 +31,7 @@
 ## Demo
 
 ## 🌐 Live Demo
-🚀 **[CodRev Website (Vercel)]([https://codrev.vercel.app](codrev.vercel.app)
+🚀 **[CodRev Website (Vercel)](codrev.vercel.app)
 
 ## Screenshots
 
