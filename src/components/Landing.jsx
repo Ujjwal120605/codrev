@@ -9,9 +9,9 @@ const Landing = () => {
     <div className="relative h-screen w-screen overflow-hidden bg-black">
       {/* Nav */}
       <Nav
-        baseColor="#1a1a1a"
+        baseColor="rgba(20, 20, 20, 0.5)"
         pillColor="#00ff41"
-        pillTextColor="#000000"
+        pillTextColor="#ffffff"
         hoveredPillTextColor="#00ff41"
         height="60px"
       />

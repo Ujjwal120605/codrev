@@ -5,7 +5,7 @@ const logo = '/abc.jpg';
 const Nav = (props) => {
   return (
     // MODIFIED: Removed "flex justify-center" to allow the child to be full-width
-    <div className="fixed top-0 left-0 right-0 z-[1000] pt-6 px-4">
+    <div className="fixed top-0 left-0 right-0 z-[1000]">
       <Pillnav
         logo={logo}
         logoAlt="Coderev Logo"

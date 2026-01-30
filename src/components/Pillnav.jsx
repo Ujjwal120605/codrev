@@ -227,9 +227,9 @@ const PillNav = ({
   };
 
   return (
-    <div className="absolute top-[1em] z-[1000] w-full md:w-auto left-0 md:left-1/2 md:-translate-x-1/2">
+    <div className="w-full">
       <nav
-        className={`w-full md:w-max flex items-center justify-between md:justify-start box-border px-4 md:px-0 ${className}`}
+        className={`w-full flex items-center justify-between box-border px-8 py-4 backdrop-blur-md bg-black/30 border-b border-white/10 ${className}`}
         aria-label="Primary"
         style={cssVars}
       >
@@ -242,14 +242,15 @@ const PillNav = ({
             ref={el => {
               logoRef.current = el;
             }}
-            className="rounded-full p-2 inline-flex items-center justify-center overflow-hidden"
+            className="inline-flex items-center justify-center px-4"
             style={{
-              width: 'var(--nav-h)',
               height: 'var(--nav-h)',
-              background: 'var(--base, #000)'
+              background: 'transparent'
             }}
           >
-            <img src={logo} alt={logoAlt} ref={logoImgRef} className="w-full h-full object-cover block" />
+            <span className="text-3xl font-extrabold bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 text-transparent bg-clip-text">
+              Coderev
+            </span>
           </Link>
         ) : (
           <a
@@ -259,23 +260,24 @@ const PillNav = ({
             ref={el => {
               logoRef.current = el;
             }}
-            className="rounded-full p-2 inline-flex items-center justify-center overflow-hidden"
+            className="inline-flex items-center justify-center px-4"
             style={{
-              width: 'var(--nav-h)',
               height: 'var(--nav-h)',
-              background: 'var(--base, #000)'
+              background: 'transparent'
             }}
           >
-            <img src={logo} alt={logoAlt} ref={logoImgRef} className="w-full h-full object-cover block" />
+            <span className="text-3xl font-extrabold bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 text-transparent bg-clip-text">
+              Coderev
+            </span>
           </a>
         )}
 
         <div
           ref={navItemsRef}
-          className="relative items-center rounded-full hidden md:flex ml-2 flex-1"
+          className="relative items-center rounded-full hidden md:flex flex-1 justify-center mx-12"
           style={{
             height: 'var(--nav-h)',
-            background: 'var(--base, #000)'
+            background: 'transparent'
           }}
         >
           <ul
