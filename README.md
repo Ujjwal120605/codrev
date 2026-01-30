@@ -1,141 +1,116 @@
+# 🚀 CodRev AI - Real-Time Code Review & Fixer
 
-#CodRev AI - Real-Time Code Review & Fixer
+[![Deployed on Vercel](https://img.shields.io/badge/Deployed-Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://codrev.vercel.app/)
+[![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactjs.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+[![Groq API](https://img.shields.io/badge/Powered%20by-Groq-orange?style=for-the-badge)](https://groq.com/)
+[![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)](LICENSE)
 
-[![Vercel](https://img.shields.io/badge/Deployed-Vercel-purple)]
+**CodRev AI** is an advanced, web-based AI coding assistant designed to supercharge developer productivity. It allows users to **review, analyze, fix, and execute code** in real-time across multiple programming languages.
 
-**CodeFixer AI** is a web-based AI-powered code assistant that allows developers to **review, analyze, and automatically fix code** in multiple programming languages. Using Google’s Gemini AI, it provides detailed code feedback, syntax fixes, bug detection, optimization suggestions, and best practice recommendations in real-time.  
-
----
-
-## Features
-
-- **Multi-language support:** JavaScript, Python, Java, C#, C++, PHP, Ruby, Go, Swift, Kotlin, TypeScript, Rust, Dart, Scala, Perl, Haskell, Elixir, R, MATLAB, Bash.
-- **Dark/Light theme toggle** for a comfortable coding experience.
-- **AI-powered code review:**  
-  - Quality rating of code (Better, Good, Normal, Bad).  
-  - Step-by-step explanation of code functionality.  
-  - Identification of syntax, runtime, and logical errors.  
-  - Suggestions for improvements and optimizations.
-- **Automatic code fixing:**  
-  - Fixes syntax and logical errors.  
-  - Follows best coding practices.  
-  - Adds proper error handling where missing.  
-  - Returns ready-to-use, optimized code.
-- **Live code editor** using **Monaco Editor**.  
-- **Responsive UI** with side-by-side code editor and AI response panel.  
-- **Markdown-based output** for clean, readable AI feedback.  
-- **Loader animation** during AI processing for better UX.
+Leveraging the speed of **Groq (Llama 3)**, it provides instant feedback, detailed explanations, and production-ready code fixes. It also features a built-in **Code Compiler** to run your snippets instantly.
 
 ---
 
-## Demo
+## 🌟 Features
 
-## 🌐 Live Demo
-🚀 **[CodRev Website (Vercel)](codrev.vercel.app)
+### 🧠 AI-Powered Analysis
+- **Smart Review**: Get a letter grade (A+ to F) for your code quality.
+- **Deep Explanation**: Step-by-step breakdown of logic and flow.
+- **Auto-Fix**: Automatically detects bugs, syntax errors, and optimizes code with one click.
+- **Security Audit**: Identifies vulnerabilities (OWASP Top 10) and suggests fixes.
 
-## Screenshots
+### ⚡ Real-Time Execution
+- **Integrated Compiler**: Run code directly in the browser using the Piston API.
+- **Multi-Language Support**: Write and run JavaScript, Python, Java, C++, Go, Rust, and 15+ other languages.
 
-<img width="1440" height="780" alt="Screenshot 2025-10-22 at 2 58 43 AM" src="https://github.com/user-attachments/assets/e36ef400-5556-48ec-bd78-d8516be1b6e6" />
-
-
-
-*Editor on the left and AI response panel on the right with dark theme enabled.*
-
----
-
-## Installation
-
-1. **Clone the repository:**
-
-```bash
-git clone https://github.com/Ujjwal120605/codrev.git
-cd codrev
-Install dependencies:
-
-bash
-Copy code
-npm install
-Add environment variables:
-
-Create a .env file at the root and add your Gemini AI API key:
-
-env
-Copy code
-VITE_GEMINI_API_KEY=your_gemini_api_key_here
-Start the development server:
-
-bash
-Copy code
-npm run dev
-Open http://localhost:5173 in your browser to see the app.
-
-Usage
-Select the programming language from the dropdown.
-
-Enter or paste your code into the editor.
-
-Click Review to get a detailed AI review of your code.
-
-Click Fix Code to automatically correct errors and improve your code.
-
-Toggle between dark and light mode using the navbar.
-
-Tech Stack
-Frontend: React, TailwindCSS, React-Select, Monaco Editor
-
-AI Integration: Google Gemini API (@google/genai)
-
-Markdown Rendering: react-markdown
-
-Loading Animations: react-spinners
-
-Deployment: Vercel
-
-Folder Structure
-arduino
-Copy code
-codrev/
-├─ public/
-├─ src/
-│  ├─ components/
-│  │  └─ Navbar.jsx
-│  ├─ App.jsx
-│  └─ App.css
-├─ package.json
-├─ vite.config.js
-└─ .env
-Contributing
-Contributions are welcome!
-
-Fork the repository
-
-Create a branch (git checkout -b feature/YourFeature)
-
-Commit your changes (git commit -m 'Add YourFeature')
-
-Push to the branch (git push origin feature/YourFeature)
-
-Open a Pull Request
-
-License
-MIT License © 2025 Ujjwal Bajpai
-
-Future Enhancements
-Add history and version tracking of code fixes.
-
-Support collaborative editing with multiple users.
-
-Add AI suggestions for test cases.
-
-Enable download fixed code functionality.
-
-Made with ❤️ using React and Google Gemini AI.
-
-yaml
-Copy code
+### 🎨 Modern Developer Experience
+- **Monaco Editor**: Professional VS Code-like editing experience.
+- **Themes**: Seamless Dark/Light mode toggle.
+- **Responsive UI**: optimized for readability and workflow.
 
 ---
 
-If you want, I can also **write an ultra-professional version with badges, GIF demo, and live deployment links**, which will make your GitHub repo **look portfolio-ready** for recruiters.  
+## 📸 Screenshots
 
-Do you want me to do that?
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/e36ef400-5556-48ec-bd78-d8516be1b6e6" alt="CodRev AI Interface" width="100%" style="border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+  <p><em>Split-view interface with Code Editor (Left) and AI Feedback/Output (Right)</em></p>
+</div>
+
+---
+
+## 🛠️ Tech Stack
+
+- **Frontend**: React.js (Vite), TailwindCSS
+- **Editor**: Monaco Editor (`@monaco-editor/react`)
+- **AI Engine**: Groq SDK (`llama-3.3-70b-versatile`) / Google Gemini (Fallback)
+- **Compiler**: Piston API calling service
+- **Animations**: GSAP, React Spinners
+- **Deployment**: Vercel
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+- Node.js (v18 or higher)
+- A free Groq API Key (from [console.groq.com](https://console.groq.com))
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/Ujjwal120605/codrev.git
+   cd codrev
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Configure Environment**
+   Create a `.env` file in the root directory:
+   ```env
+   VITE_GROQ_API_KEY=gsk_your_key_here
+   ```
+
+4. **Run the App**
+   ```bash
+   npm run dev
+   ```
+   Open [http://localhost:5173](http://localhost:5173) to view it in the browser.
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+1. Fork the project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+---
+
+## 👤 Author
+
+**Ujjwal Bajpai**
+
+- GitHub: [@Ujjwal120605](https://github.com/Ujjwal120605)
+- LinkedIn: [Ujjwal Bajpai](https://linkedin.com/in/ujjwal-bajpai)
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+<div align="center">
+  <sub>Made with ❤️ using React and Groq AI</sub>
+</div>
